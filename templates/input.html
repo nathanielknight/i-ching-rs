@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<form action="/throw" method="get">
+    <label for="prompt">Prompt</label>
+    <textarea name="prompt"></textarea>
+    <input style="display: none;" type="date" id="asof" name="asof" />
+    <input type="submit" value="Cast" />
+</form>
+<script>
+    const asofInput = document.getElementById("asof");
+    asofInput.valueAsDate = new Date();
+</script>
+{% endblock %}

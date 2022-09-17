@@ -1,0 +1,15 @@
+[package]
+name = "i-ching-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+askama = "0.11.1"
+axum = "0.5.16"
+chrono = { version = "0.4.22", features = ["serde"] }
+rand = "0.8.5"
+serde = { version = "1.0.144", features = [ "derive" ] }
+sha2 = "0.10.6"
+tokio = { version="1.21.1", default-features=false, features = ["macros", "rt-multi-thread"] }
