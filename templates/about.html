@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{%block content %}
+<p>
+    This program simulates casting the I Ching using the
+    <a href="https://en.wikipedia.org/wiki/I_Ching_divination#Three-coin_method">
+        three coin method.
+    </a>
+    It works by hashing the date and your query to seed a random number generator
+    and simulating coin flips with it.
+</p>
+<p>
+    You can save the URL of your casting to come back to it later.
+</p>
+
+<h2>Links</h2>
+<ul>
+    <li><a href="https://nathanielknight.ca">Author</a></li>
+    <li><a href="https://github.com/nathanielknight/i-ching-rs">Source Code</a></li>
+</ul>
+{% endblock %}

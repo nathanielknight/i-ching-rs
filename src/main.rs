@@ -8,7 +8,8 @@ use serde::Deserialize;
 async fn main() {
     let app = axum::Router::new()
         .route("/", get(get_input))
-        .route("/throw", get(get_throw));
+        .route("/throw", get(get_throw))
+        .route("/about", get(get_about));
     let addr = std::net::SocketAddr::from(([0, 0, 0, 0], 61849));
     println!("Listening on {addr}");
     axum::Server::bind(&addr)
@@ -32,10 +33,6 @@ struct ThrowViewModel {
     throw: String,
 }
 
-#[derive(Deserialize, Template)]
-#[template(path = "input.html")]
-struct InputViewModel {}
-
 type AppResponse = Result<Html<String>>;
 
 pub(crate) async fn get_throw(Query(params): Query<ThrowParams>) -> AppResponse {
@@ -52,9 +49,22 @@ pub(crate) async fn get_throw(Query(params): Query<ThrowParams>) -> AppResponse 
         .map_err(|_| ErrorResponse::from("Template render error"))
 }
 
+#[derive(Template)]
+#[template(path = "input.html")]
+struct InputViewModel {}
+
 pub(crate) async fn get_input() -> Html<String> {
     let input = InputViewModel {};
-    Html(input.render().expect("Failed to render static template!"))
+    Html(input.render().expect("Failed to render input template!"))
+}
+
+#[derive(Template)]
+#[template(path = "about.html")]
+struct AboutViewModel {}
+
+async fn get_about() -> Html<String> {
+    let about = AboutViewModel {};
+    Html(about.render().expect("Failed to render about page"))
 }
 
 fn seed(params: &ThrowParams) -> [u8; 32] {
