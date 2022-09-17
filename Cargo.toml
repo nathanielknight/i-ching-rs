@@ -2,6 +2,11 @@
 name = "i-ching-rs"
 version = "0.1.0"
 edition = "2021"
+description = "A tiny web server for casting the I Ching."
+repository = "https://github.com/nathanielknight/i-ching-rs"
+license-file = "LICENSE.md"
+readme = "README.md"
+authors = ["Nathaniel Knight <nathaniel.ep@gmail.com>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
