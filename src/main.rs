@@ -40,7 +40,7 @@ type AppResponse = Result<Html<String>>;
 
 pub(crate) async fn get_throw(Query(params): Query<ThrowParams>) -> AppResponse {
     let mut thrower = Thrower::new(&params);
-    let throw = format_throws(thrower.throws());
+    let throw = format_hexagram(thrower.hexagram());
     let viewmodel = ThrowViewModel {
         prompt: params.prompt,
         asof: params.asof,
@@ -48,7 +48,7 @@ pub(crate) async fn get_throw(Query(params): Query<ThrowParams>) -> AppResponse 
     };
     viewmodel
         .render()
-        .map(|b| Html(b))
+        .map(Html)
         .map_err(|_| ErrorResponse::from("Template render error"))
 }
 
@@ -85,12 +85,19 @@ impl Thrower {
         }
     }
 
-    fn throw(&mut self) -> u8 {
-        self.coin() + self.coin() + self.coin()
+    fn throw(&mut self) -> Line {
+        use Line::*;
+        match self.coin() + self.coin() + self.coin() {
+            6 => ChangingYin,
+            7 => StaticYang,
+            8 => StaticYin,
+            9 => ChangingYang,
+            t => panic!("Impossible throw value: {}", t),
+        }
     }
 
-    fn throws(&mut self) -> [u8; 6] {
-        let mut throws = [0; 6];
+    fn hexagram(&mut self) -> Hexagram {
+        let mut throws = [Line::StaticYang; 6];
         for idx in 0..6 {
             throws[idx] = self.throw();
         }
@@ -98,24 +105,41 @@ impl Thrower {
     }
 }
 
-fn format_throw(t: u8) -> &'static str {
-    match t {
-        6 => "--- x --- 6",
-        7 => "--------- 7",
-        8 => "---   --- 8",
-        9 => "----o---- 9",
-        _ => panic!("Impossible throw value : {}", t),
+/// Yin -> broken line
+/// Yang -> solid line
+/// changing yin+x, yang+0
+#[derive(Clone, Copy)]
+enum Line {
+    ChangingYin, // broken
+    ChangingYang,
+    StaticYin,
+    StaticYang,
+}
+
+impl From<Line> for String {
+    fn from(line: Line) -> String {
+        use Line::*;
+        match line {
+            ChangingYin => "--- x --- 6",
+            StaticYang => "--------- 7",
+            StaticYin => "---   --- 8",
+            ChangingYang => "----o---- 9",
+        }
+        .to_owned()
     }
 }
 
-fn format_throws(ts: [u8; 6]) -> String {
-    let lines: Vec<String> = ts.iter().map(|t| format_throw(*t).to_owned()).collect();
+type Hexagram = [Line; 6];
+
+fn format_hexagram(ts: Hexagram) -> String {
+    let lines: Vec<String> = ts.iter().map(|t| (*t).into()).collect();
     lines.join("\n")
 }
 
 #[test]
 fn test_throwing() {
-    const ALLOWED: [u8; 4] = [6, 7, 8, 9];
+    // Try lots of throws to give us some confidence that the random logic
+    // always falls within the expected bounds.
 
     let params = ThrowParams {
         prompt: String::from("Once there was a way to get back home."),
@@ -124,10 +148,8 @@ fn test_throwing() {
     let mut thrower = Thrower::new(&params);
 
     for _ in 0..1_000_000 {
-        let v = thrower.throw();
-        assert!(ALLOWED.contains(&v));
+        thrower.throw();
     }
 
-    let throws = thrower.throws();
-    assert!(throws.iter().all(|t| ALLOWED.contains(&t)));
+    thrower.hexagram();
 }
