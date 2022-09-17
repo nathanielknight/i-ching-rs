@@ -15,6 +15,7 @@ askama = "0.11.1"
 axum = "0.5.16"
 chrono = { version = "0.4.22", features = ["serde"] }
 rand = "0.8.5"
+rand_chacha = "0.3.1"
 serde = { version = "1.0.144", features = [ "derive" ] }
 sha2 = "0.10.6"
 tokio = { version="1.21.1", default-features=false, features = ["macros", "rt-multi-thread"] }

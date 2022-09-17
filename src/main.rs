@@ -76,13 +76,13 @@ fn seed(params: &ThrowParams) -> [u8; 32] {
 }
 
 struct Thrower {
-    rng: rand::rngs::StdRng,
+    rng: rand_chacha::ChaCha12Rng,
 }
 
 impl Thrower {
     fn new(params: &ThrowParams) -> Self {
         use rand::SeedableRng;
-        let rng = rand::rngs::StdRng::from_seed(seed(params));
+        let rng = rand_chacha::ChaCha12Rng::from_seed(seed(params));
         Thrower { rng }
     }
 
@@ -163,3 +163,6 @@ fn test_throwing() {
 
     thrower.hexagram();
 }
+
+#[test]
+fn test_throw_stability() {}

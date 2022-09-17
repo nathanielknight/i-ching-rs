@@ -18,8 +18,11 @@ See [LICENSE.md] for the full text of the license.
 To generate a hexagram, this program
 
 * collects a prompt and the current date,
-* hashes them with SHA256,
-* seeds a random number generator with that hash, and
+* hashes them with [SHA256],
+* seeds a random number generator (specifically, a [ChaCha12 RNG]) with that
+  hash, and
 * simulates the [three-coin method] for casting the I Ching.
 
+[SHA256]: https://docs.rs/sha2/latest/sha2/type.Sha256.html
+[ChaCha12 RNG]: https://docs.rs/rand_chacha/0.3.1/rand_chacha/struct.ChaCha12Rng.html
 [three-coin method]: https://en.wikipedia.org/wiki/I_Ching_divination#Three-coin_method

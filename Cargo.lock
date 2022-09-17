@@ -362,6 +362,7 @@ dependencies = [
  "axum",
  "chrono",
  "rand",
+ "rand_chacha",
  "serde",
  "sha2",
  "tokio",
